@@ -6,9 +6,11 @@ import {
   DeleteDateColumn,
   PrimaryGeneratedColumn,
   OneToMany,
+  ManyToOne,
 } from 'typeorm';
 import { ProdutoImagemEntity } from './produto-imagem.entity';
 import { ProdutoCaracteristicaEntity } from './produto-caracteristica.entity';
+import { FornecedorEntity } from '../fornecedor/fornecedor.entity';
 
 @Entity({ name: 'produtos' })
 export class ProdutoEntity {
@@ -45,14 +47,20 @@ export class ProdutoEntity {
   @OneToMany(
     () => ProdutoImagemEntity,
     (produtoImageEntity) => produtoImageEntity.produto,
-    { cascade: true, eager: true },
+    { cascade: true, eager: true, nullable: true },
   )
   imagens: ProdutoImagemEntity[];
 
   @OneToMany(
     () => ProdutoCaracteristicaEntity,
     (produtoCaracteristicaEntity) => produtoCaracteristicaEntity.produto,
-    { cascade: true, eager: true },
+    { cascade: true, eager: true, nullable: true },
   )
   caracteristicas: ProdutoCaracteristicaEntity[];
+
+  @ManyToOne(
+    () => FornecedorEntity, (fornecedor) => fornecedor.produtos, 
+    { nullable: true, cascade: false, eager: true }
+  )
+  fornecedor: FornecedorEntity;
 }

@@ -4,12 +4,14 @@ import { ListaProdutoDTO } from './dto/ListaProduto.dto';
 import { ProdutoEntity } from './produto.entity';
 import { Repository } from 'typeorm';
 import { AtualizaProdutoDTO } from './dto/AtualizaProduto.dto';
+import { ProdutoRepository } from './produto.repository';
 
 @Injectable()
 export class ProdutoService {
   constructor(
     @InjectRepository(ProdutoEntity)
     private readonly produtoRepository: Repository<ProdutoEntity>,
+    private readonly produtoCustomRepository: ProdutoRepository
   ) {}
 
   async criaProduto(produtoEntity: ProdutoEntity) {
@@ -38,10 +40,14 @@ export class ProdutoService {
   async atualizaProduto(id: string, novosDados: AtualizaProdutoDTO) {
     const entityName = await this.produtoRepository.findOneBy({ id });
     Object.assign(entityName, novosDados);
-    await this.produtoRepository.save(entityName);
+    await this.produtoCustomRepository.save(entityName);
   }
 
   async deletaProduto(id: string) {
     await this.produtoRepository.delete(id);
+  }
+
+  async buscarPorCategoria(categoria: string): Promise<ProdutoEntity[]> {
+    return this.produtoCustomRepository.findByCategoria(categoria);
   }
 }
