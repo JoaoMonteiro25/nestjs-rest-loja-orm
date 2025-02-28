@@ -1,3 +1,6 @@
+import { FornecedorEntity } from 'src/fornecedor/fornecedor.entity';
+import { ProdutoCaracteristicaEntity } from 'src/produto/produto-caracteristica.entity';
+import { ProdutoImagemEntity } from 'src/produto/produto-imagem.entity';
 import {
   Entity,
   Column,
@@ -5,6 +8,8 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToOne,
 } from 'typeorm';
 
 @Entity({ name: 'usuarios' })
@@ -29,4 +34,23 @@ export class UsuarioEntity {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
+  @OneToMany(
+    () => ProdutoImagemEntity,
+    (produtoImageEntity) => produtoImageEntity.produto,
+    { cascade: true, eager: true },
+  )
+  imagens: ProdutoImagemEntity[];
+
+  @OneToMany(
+    () => ProdutoCaracteristicaEntity,
+    (produtoCaracteristicaEntity) => produtoCaracteristicaEntity.produto,
+    { cascade: true, eager: true },
+  )
+  caracteristicas: ProdutoCaracteristicaEntity[];
+
+  @ManyToOne(
+    () => FornecedorEntity, (fornecedor) => fornecedor.produtos, 
+    { nullable: true, cascade: false, eager: true }
+  )
+  fornecedor: FornecedorEntity;
 }

@@ -38,7 +38,7 @@ export class ProdutoService {
   }
 
   async atualizaProduto(id: string, novosDados: AtualizaProdutoDTO) {
-    const entityName = await this.produtoRepository.findOneBy({ id });
+    const entityName = await this.produtoRepository.findOneBy({id});
     Object.assign(entityName, novosDados);
     await this.produtoCustomRepository.save(entityName);
   }
