@@ -17,4 +17,12 @@ export class ProdutoRepository {
   async save(produto: ProdutoEntity) {
     return this.produtoRepo.save(produto);
   }
+  async create(produto: ProdutoEntity) {
+    return this.produtoRepo.save(produto);
+}
+
+async delete(id: string) {
+    return this.produtoRepo.delete(id);
+}
+
 }
