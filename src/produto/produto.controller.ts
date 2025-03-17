@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -6,8 +7,10 @@ import {
   Param,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import { randomUUID } from 'crypto';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 import { AtualizaProdutoDTO } from './dto/atualizaProduto.dto';
 import { CriaProdutoDTO } from './dto/CriaProduto.dto';
@@ -39,6 +42,16 @@ export class ProdutoController {
   @Get()
   async listaTodos() {
     return this.produtoService.listProdutos();
+  }
+  @Get('/:id')
+  @UseInterceptors(CacheInterceptor)
+  async listaProdutoPorId(@Param('id') id: string) {
+    try {
+      console.log('Buscando pelo BD');
+      return await this.produtoService.listaProdutosPorId(id);
+    } catch (error) {
+      throw new BadRequestException(`Erro ao buscar produto `);
+    }
   }
 
   @Put('/:id')

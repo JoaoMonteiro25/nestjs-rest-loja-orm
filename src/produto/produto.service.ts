@@ -11,7 +11,7 @@ export class ProdutoService {
   constructor(
     @InjectRepository(ProdutoEntity)
     private readonly produtoRepository: Repository<ProdutoEntity>,
-    private readonly produtoCustomRepository: ProdutoRepository
+    private readonly produtoCustomRepository: ProdutoRepository,
   ) {}
 
   async criaProduto(produtoEntity: ProdutoEntity) {
@@ -37,8 +37,11 @@ export class ProdutoService {
     return produtosLista;
   }
 
+  async listaProdutosPorId(id: string) {
+    return await this.produtoRepository.findOneBy({ id });
+  }
   async atualizaProduto(id: string, novosDados: AtualizaProdutoDTO) {
-    const entityName = await this.produtoRepository.findOneBy({id});
+    const entityName = await this.produtoRepository.findOneBy({ id });
     Object.assign(entityName, novosDados);
     await this.produtoCustomRepository.save(entityName);
   }
